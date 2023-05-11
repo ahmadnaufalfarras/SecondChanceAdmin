@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:second_chance_admin/views/dashboard_screen.dart';
 import 'package:second_chance_admin/views/main_screen.dart';
 
 void main() async {
