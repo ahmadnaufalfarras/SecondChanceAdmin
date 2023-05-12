@@ -103,7 +103,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.yellow.shade900,
+                        backgroundColor: Colors.yellow.shade900,
                       ),
                       onPressed: () {
                         pickImage();
@@ -118,7 +118,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.yellow.shade900,
+                  backgroundColor: Colors.yellow.shade900,
                 ),
                 onPressed: () {
                   uploadToFireStore();

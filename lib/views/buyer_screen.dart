@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:second_chance_admin/widgets/vendor_widget.dart';
+import 'package:second_chance_admin/widgets/buyer_widget.dart';
 
-class VendorScreen extends StatelessWidget {
-  static const String routeName = '\VendorsScreen';
+class BuyerScreen extends StatelessWidget {
+  static const String routeName = '\BuyersScreen';
 
   Widget _rowHeader(String text, int flex) {
     return Expanded(
@@ -34,7 +34,7 @@ class VendorScreen extends StatelessWidget {
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.all(10),
             child: const Text(
-              'Manager Vendors',
+              'Manager Buyers',
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 36,
@@ -43,14 +43,14 @@ class VendorScreen extends StatelessWidget {
           ),
           Row(
             children: [
-              _rowHeader('LOGO', 1),
-              _rowHeader('BUSSINESS NAME', 3),
-              _rowHeader('CITY', 2),
-              _rowHeader('STATE', 2),
-              _rowHeader('ACTION', 1)
+              _rowHeader('PROFILE IMAGE', 1),
+              _rowHeader('FULL NAME', 2),
+              _rowHeader('EMAIL', 2),
+              _rowHeader('PHONE NUMBER', 2),
+              _rowHeader('ADDRESS', 2),
             ],
           ),
-          VendorWidget(),
+          BuyerWidget(),
         ],
       ),
     );
