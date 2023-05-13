@@ -30,7 +30,7 @@ class ProductScreen extends StatelessWidget {
                   child: Container(
                     height: 50,
                     width: 50,
-                    child: Image.network(productsData['image']),
+                    child: Image.network(productsData['imageUrlList'][0]),
                   ),
                 )),
                 DataCell(Text(
