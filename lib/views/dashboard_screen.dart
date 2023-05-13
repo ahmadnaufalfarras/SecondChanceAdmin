@@ -82,7 +82,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   Row(
                                     children: [
                                       Icon(
-                                        Icons.article,
+                                        Icons.store,
                                         size: 26,
                                       ),
                                       SizedBox(
@@ -122,7 +122,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   Row(
                                     children: [
                                       Icon(
-                                        Icons.comment,
+                                        Icons.person,
                                         size: 26,
                                         color: Colors.red,
                                       ),
@@ -170,7 +170,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   Row(
                                     children: [
                                       Icon(
-                                        Icons.article,
+                                        Icons.inventory_2,
                                         size: 26,
                                         color: Colors.blue,
                                       ),
@@ -213,7 +213,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   Row(
                                     children: [
                                       Icon(
-                                        Icons.comment,
+                                        Icons.shopping_cart,
                                         size: 26,
                                         color: Colors.green,
                                       ),
