@@ -25,10 +25,13 @@ class ProductScreen extends StatelessWidget {
             final productsData = document.data() as Map<String, dynamic>;
             return DataRow(
               cells: [
-                DataCell(Container(
-                  height: 50,
-                  width: 50,
-                  child: Image.network(productsData['image']),
+                DataCell(Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    child: Image.network(productsData['image']),
+                  ),
                 )),
                 DataCell(Text(
                   productsData['productName'],
