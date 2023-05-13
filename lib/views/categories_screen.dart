@@ -115,8 +115,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         height: 20,
                       ),
                       ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow.shade900),
                           onPressed: () {
                             _pickImage();
                           },
@@ -149,8 +147,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   width: 30,
                 ),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow.shade900),
                   onPressed: () {
                     uploadCategory();
                   },
