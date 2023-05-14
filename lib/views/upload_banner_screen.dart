@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:second_chance_admin/controllers/banner_controller.dart';
 import 'package:second_chance_admin/widgets/banner_widget.dart';
 
 class UploadBannerScreen extends StatefulWidget {
@@ -13,45 +12,18 @@ class UploadBannerScreen extends StatefulWidget {
 }
 
 class _UploadBannerScreenState extends State<UploadBannerScreen> {
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  dynamic _image;
+  final BannerController _bannerController = BannerController();
 
-  String? fileName;
+  Uint8List? _selectedImage;
 
-  pickImage() async {
-    FilePickerResult? result = await FilePicker.platform
-        .pickFiles(allowMultiple: false, type: FileType.image);
-    if (result != null) {
+  @override
+  void initState() {
+    super.initState();
+    _bannerController.onImageSelected = (image) {
       setState(() {
-        _image = result.files.first.bytes;
-
-        fileName =
-            result.files.first.name; //biar bisa "pick file by their names"
+        _selectedImage = image;
       });
-    }
-  }
-
-  _uploadBannersToStorage(dynamic image) async {
-    Reference ref = _storage.ref().child('Banners').child(fileName!);
-
-    UploadTask uploadTask = ref.putData(image);
-    TaskSnapshot snapshot = await uploadTask;
-    String downloadUrl = await snapshot.ref.getDownloadURL();
-    return downloadUrl;
-  }
-
-  uploadToFireStore() async {
-    EasyLoading.show();
-    if (_image != null) {
-      String imageUrl = await _uploadBannersToStorage(_image);
-
-      await _firestore.collection('banners').doc(fileName).set({
-        'image': imageUrl,
-      }).whenComplete(() {
-        EasyLoading.dismiss();
-      });
-    }
+    };
   }
 
   @override
@@ -89,9 +61,9 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                       ),
 
                       //biar image yang kita upload bisa terlihat
-                      child: _image != null
+                      child: _selectedImage != null
                           ? Image.memory(
-                              _image,
+                              _selectedImage!,
                               fit: BoxFit.cover,
                             )
                           : Center(
@@ -103,7 +75,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        pickImage();
+                        _bannerController.pickBannerImage();
                       },
                       child: Text('Upload Image'),
                     ),
@@ -115,7 +87,11 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  uploadToFireStore();
+                  _bannerController.uploadBanner(context).then((value) {
+                    setState(() {
+                      _selectedImage = null;
+                    });
+                  });
                 },
                 child: Text('Save'),
               ),

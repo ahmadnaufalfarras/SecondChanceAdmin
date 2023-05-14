@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:second_chance_admin/widgets/category_widget.dart';
+import 'package:uuid/uuid.dart';
 
 class CategoriesScreen extends StatefulWidget {
   static const String routeName = '\CategoriesScreen';
@@ -19,7 +20,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   dynamic _image;
 
-  String? filename;
+  String filename = Uuid().v4();
 
   late String categoryName;
 
@@ -30,14 +31,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     if (result != null) {
       setState(() {
         _image = result.files.first.bytes;
-
-        filename = result.files.first.name;
       });
     }
   }
 
   _uploadCategoryBannerToStorage(dynamic image) async {
-    Reference ref = _storage.ref().child('categoryImages').child(filename!);
+    Reference ref = _storage.ref().child('categoryImages').child(filename);
 
     UploadTask uploadTask = ref.putData(image);
 
@@ -58,6 +57,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       }).whenComplete(() {
         EasyLoading.dismiss();
         setState(() {
+          filename = Uuid().v4();
           _image = null;
           _formKey.currentState!.reset();
         });
