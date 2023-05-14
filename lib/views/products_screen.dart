@@ -1,17 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:second_chance_admin/controllers/product_controller.dart';
+import 'package:second_chance_admin/models/product_model.dart';
 
 class ProductScreen extends StatelessWidget {
   static const String routeName = '\ProductScreen';
 
+  final ProductController _productController = ProductController();
+
   @override
   Widget build(BuildContext context) {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('products').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      body: StreamBuilder<List<ProductDataModel>>(
+        stream: _productController.getProductData(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<ProductDataModel>> snapshot) {
+          print(snapshot);
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
@@ -21,8 +24,7 @@ class ProductScreen extends StatelessWidget {
           }
 
           final dataRows =
-              snapshot.data!.docs.map<DataRow>((DocumentSnapshot document) {
-            final productsData = document.data() as Map<String, dynamic>;
+              snapshot.data!.map<DataRow>((ProductDataModel productData) {
             return DataRow(
               cells: [
                 DataCell(Padding(
@@ -30,40 +32,36 @@ class ProductScreen extends StatelessWidget {
                   child: Container(
                     height: 50,
                     width: 50,
-                    child: Image.network(productsData['imageUrlList'][0]),
+                    child: productData.imageUrlList.isNotEmpty
+                        ? Image.network(productData.imageUrlList[0])
+                        : Text('-'),
                   ),
                 )),
                 DataCell(Text(
-                  productsData['productName'],
+                  productData.productName.isNotEmpty
+                      ? productData.productName
+                      : '-',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
                 DataCell(Text(
-                  productsData['productPrice'].toString(),
+                  productData.productPrice.toString(),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
                 DataCell(Text(
-                  productsData['category'].toString(),
+                  productData.category.isNotEmpty ? productData.category : '-',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
-                DataCell(productsData['approved'] == false
+                DataCell(productData.approved == false
                     ? ElevatedButton(
-                        onPressed: () async {
-                          await _firestore
-                              .collection('products')
-                              .doc(productsData['productId'])
-                              .update({
-                            'approved': true,
-                          });
+                        onPressed: () {
+                          _productController
+                              .approveProduct(productData.productId);
                         },
                         child: Text('Approved'))
                     : ElevatedButton(
-                        onPressed: () async {
-                          await _firestore
-                              .collection('products')
-                              .doc(productsData['productId'])
-                              .update({
-                            'approved': false,
-                          });
+                        onPressed: () {
+                          _productController
+                              .rejectProduct(productData.productId);
                         },
                         child: Text('Reject'))),
               ],

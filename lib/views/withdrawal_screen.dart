@@ -1,15 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:second_chance_admin/controllers/withdrawal_controller.dart';
+import 'package:second_chance_admin/models/withdrawal_model.dart';
 
 class WithdrawalScreen extends StatelessWidget {
   static const String routeName = '\WithdrawalScreen';
 
+  final WithdrawalController _withdrawalController = WithdrawalController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('withdrawal').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      body: StreamBuilder<List<WithdrawalDataModel>>(
+        stream: _withdrawalController.getWithdrawalData(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<WithdrawalDataModel>> snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
@@ -19,32 +23,39 @@ class WithdrawalScreen extends StatelessWidget {
           }
 
           final dataRows =
-              snapshot.data!.docs.map<DataRow>((DocumentSnapshot document) {
-            final withdrawalUserData = document.data() as Map<String, dynamic>;
+              snapshot.data!.map<DataRow>((WithdrawalDataModel withdrawalData) {
             return DataRow(
               cells: [
                 DataCell(Text(
-                  withdrawalUserData['name'],
+                  withdrawalData.name.isNotEmpty ? withdrawalData.name : '-',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
                 DataCell(Text(
-                  withdrawalUserData['amount'].toString(),
+                  withdrawalData.amount.toString(),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
                 DataCell(Text(
-                  withdrawalUserData['bankName'],
+                  withdrawalData.bankName.isNotEmpty
+                      ? withdrawalData.bankName
+                      : '-',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
                 DataCell(Text(
-                  withdrawalUserData['bankAccountName'],
+                  withdrawalData.bankAccountName.isNotEmpty
+                      ? withdrawalData.bankAccountName
+                      : '-',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
                 DataCell(Text(
-                  withdrawalUserData['bankAccountNumber'],
+                  withdrawalData.bankAccountNumber.isNotEmpty
+                      ? withdrawalData.bankAccountNumber
+                      : '-',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
                 DataCell(Text(
-                  withdrawalUserData['mobile'],
+                  withdrawalData.mobile.isNotEmpty
+                      ? withdrawalData.mobile
+                      : '-',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
               ],

@@ -1,16 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:second_chance_admin/controllers/vendor_controller.dart';
+import 'package:second_chance_admin/models/vendor_model.dart';
 
 class VendorScreen extends StatelessWidget {
   static const String routeName = '\VendorScreen';
 
+  final VendorController _vendorController = VendorController();
+
   @override
   Widget build(BuildContext context) {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('vendors').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      body: StreamBuilder<List<VendorDataModel>>(
+        stream: _vendorController.getVendorData(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<VendorDataModel>> snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
@@ -20,8 +23,7 @@ class VendorScreen extends StatelessWidget {
           }
 
           final dataRows =
-              snapshot.data!.docs.map<DataRow>((DocumentSnapshot document) {
-            final vendorUserData = document.data() as Map<String, dynamic>;
+              snapshot.data!.map<DataRow>((VendorDataModel vendorData) {
             return DataRow(
               cells: [
                 DataCell(Padding(
@@ -29,43 +31,44 @@ class VendorScreen extends StatelessWidget {
                   child: Container(
                     height: 50,
                     width: 50,
-                    child: Image.network(vendorUserData['storeImage']),
+                    child: vendorData.storeImage.isNotEmpty
+                        ? Image.network(vendorData.storeImage)
+                        : Text('-'),
                   ),
                 )),
-                DataCell(Text(vendorUserData['businessName'],
+                DataCell(Text(
+                    vendorData.businessName.isNotEmpty
+                        ? vendorData.businessName
+                        : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(Text(
-                    vendorUserData['cityValue'].toString().toUpperCase(),
+                    vendorData.cityValue.isNotEmpty
+                        ? vendorData.cityValue.toString().toUpperCase()
+                        : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(Text(
-                    vendorUserData['stateValue'].toString().toUpperCase(),
+                    vendorData.stateValue.isNotEmpty
+                        ? vendorData.stateValue.toString().toUpperCase()
+                        : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(Text(
-                    vendorUserData['countryValue']
-                        .toString()
-                        .split(' ')
-                        .last
-                        .toUpperCase(),
+                    vendorData.countryValue.isNotEmpty
+                        ? vendorData.countryValue
+                            .toString()
+                            .split(' ')
+                            .last
+                            .toUpperCase()
+                        : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(vendorUserData['approved'] == false
+                DataCell(vendorData.approved == false
                     ? ElevatedButton(
-                        onPressed: () async {
-                          await _firestore
-                              .collection('vendors')
-                              .doc(vendorUserData['vendorId'])
-                              .update({
-                            'approved': true,
-                          });
+                        onPressed: () {
+                          _vendorController.approveVendor(vendorData.vendorId);
                         },
                         child: Text('Approved'))
                     : ElevatedButton(
-                        onPressed: () async {
-                          await _firestore
-                              .collection('vendors')
-                              .doc(vendorUserData['vendorId'])
-                              .update({
-                            'approved': false,
-                          });
+                        onPressed: () {
+                          _vendorController.rejectVendor(vendorData.vendorId);
                         },
                         child: Text('Reject')))
               ],

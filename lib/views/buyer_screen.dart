@@ -1,15 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:second_chance_admin/controllers/buyer_controller.dart';
+import 'package:second_chance_admin/models/buyer_model.dart';
 
 class BuyerScreen extends StatelessWidget {
   static const String routeName = '\BuyerScreen';
 
+  final BuyerController _buyerController = BuyerController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('buyers').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      body: StreamBuilder<List<BuyerDataModel>>(
+        stream: _buyerController.getBuyerData(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<BuyerDataModel>> snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
@@ -19,25 +23,34 @@ class BuyerScreen extends StatelessWidget {
           }
 
           final dataRows =
-              snapshot.data!.docs.map<DataRow>((DocumentSnapshot document) {
-            final buyerUserData = document.data() as Map<String, dynamic>;
+              snapshot.data!.map<DataRow>((BuyerDataModel buyerData) {
             return DataRow(
               cells: [
-                DataCell(Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 50,
-                    width: 50,
-                    child: Image.network(buyerUserData['profileImage']),
+                DataCell(
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      child: buyerData.profileImage.isNotEmpty
+                          ? Image.network(buyerData.profileImage)
+                          : Text('-'),
+                    ),
                   ),
-                )),
-                DataCell(Text(buyerUserData['fullName'],
+                ),
+                DataCell(Text(
+                    buyerData.fullName.isNotEmpty ? buyerData.fullName : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(buyerUserData['email'],
+                DataCell(Text(
+                    buyerData.email.isNotEmpty ? buyerData.email : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(buyerUserData['phoneNumber'],
+                DataCell(Text(
+                    buyerData.phoneNumber.isNotEmpty
+                        ? buyerData.phoneNumber
+                        : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(buyerUserData['address'],
+                DataCell(Text(
+                    buyerData.address.isNotEmpty ? buyerData.address : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
               ],
             );

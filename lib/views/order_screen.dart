@@ -1,16 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:second_chance_admin/controllers/order_controller.dart';
+import 'package:second_chance_admin/models/order_model.dart';
 
 class OrderScreen extends StatelessWidget {
   static const String routeName = '\OrderScreen';
 
+  final OrderController _orderController = OrderController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('orders').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      body: StreamBuilder<List<OrderDataModel>>(
+        stream: _orderController.getOrderData(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<OrderDataModel>> snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
@@ -20,21 +24,25 @@ class OrderScreen extends StatelessWidget {
           }
 
           final dataRows =
-              snapshot.data!.docs.map<DataRow>((DocumentSnapshot document) {
-            final orderUserData = document.data() as Map<String, dynamic>;
+              snapshot.data!.map<DataRow>((OrderDataModel orderData) {
             return DataRow(
               cells: [
-                DataCell(Text(orderUserData['orderId'],
+                DataCell(Text(
+                    orderData.orderId.isNotEmpty ? orderData.orderId : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(Text(
-                    DateFormat('dd MMM yyyy hh:mm a')
-                        .format(orderUserData['orderDate'].toDate()),
+                    DateFormat('dd MMM yyyy hh:mm a').format(
+                      orderData.orderDate.toDate(),
+                    ),
                     style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(orderUserData['productId'],
+                DataCell(Text(
+                    orderData.productId.isNotEmpty ? orderData.productId : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(orderUserData['buyerId'],
+                DataCell(Text(
+                    orderData.buyerId.isNotEmpty ? orderData.buyerId : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(orderUserData['vendorId'],
+                DataCell(Text(
+                    orderData.vendorId.isNotEmpty ? orderData.vendorId : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
               ],
             );
