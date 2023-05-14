@@ -14,7 +14,6 @@ class ProductScreen extends StatelessWidget {
         stream: _productController.getProductData(),
         builder: (BuildContext context,
             AsyncSnapshot<List<ProductDataModel>> snapshot) {
-          print(snapshot);
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
