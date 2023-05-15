@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:second_chance_admin/controllers/category_controller.dart';
 import 'package:second_chance_admin/widgets/category_widget.dart';
-import 'package:uuid/uuid.dart';
 
 class CategoriesScreen extends StatefulWidget {
   static const String routeName = '\CategoriesScreen';
@@ -14,57 +12,26 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final CategoryController _categoryController = CategoryController();
 
-  dynamic _image;
+  Uint8List? _selectedImage;
+  String? categoryName;
 
-  String filename = Uuid().v4();
-
-  late String categoryName;
-
-  _pickImage() async {
-    FilePickerResult? result = await FilePicker.platform
-        .pickFiles(allowMultiple: false, type: FileType.image);
-
-    if (result != null) {
+  @override
+  void initState() {
+    super.initState();
+    _categoryController.onImageSelected = (image) {
       setState(() {
-        _image = result.files.first.bytes;
+        _selectedImage = image;
       });
-    }
+    };
   }
 
-  _uploadCategoryBannerToStorage(dynamic image) async {
-    Reference ref = _storage.ref().child('categoryImages').child(filename);
-
-    UploadTask uploadTask = ref.putData(image);
-
-    TaskSnapshot snapshot = await uploadTask;
-    String downloadUrl = await snapshot.ref.getDownloadURL();
-
-    return downloadUrl;
-  }
-
-  uploadCategory() async {
-    EasyLoading.show();
-    if (_formKey.currentState!.validate()) {
-      String imageUrl = await _uploadCategoryBannerToStorage(_image);
-
-      await _firestore.collection('categories').doc(filename).set({
-        'image': imageUrl,
-        'categoryName': categoryName,
-      }).whenComplete(() {
-        EasyLoading.dismiss();
-        setState(() {
-          filename = Uuid().v4();
-          _image = null;
-          _formKey.currentState!.reset();
-        });
-      });
-    } else {
-      print('Oh Bad Guy');
-    }
+  @override
+  void dispose() {
+    _categoryController.onImageSelected = null;
+    super.dispose();
   }
 
   @override
@@ -102,9 +69,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           border: Border.all(color: Colors.grey.shade900),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: _image != null
+                        child: _selectedImage != null
                             ? Image.memory(
-                                _image,
+                                _selectedImage!,
                                 fit: BoxFit.cover,
                               )
                             : Center(
@@ -116,7 +83,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       ),
                       ElevatedButton(
                           onPressed: () {
-                            _pickImage();
+                            _categoryController.pickCategoryImage();
                           },
                           child: Text('Upload Image'))
                     ],
@@ -148,7 +115,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    uploadCategory();
+                    if (_formKey.currentState!.validate()) {
+                      _categoryController
+                          .uploadCategory(context, categoryName!, _formKey)
+                          .then((value) {
+                        setState(() {
+                          _selectedImage = null;
+                          categoryName = null;
+                        });
+                      });
+                    }
                   },
                   child: Text('Save Image'),
                 )
