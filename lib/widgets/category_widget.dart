@@ -3,7 +3,7 @@ import 'package:second_chance_admin/controllers/category_controller.dart';
 import 'package:second_chance_admin/models/category_model.dart';
 
 class CategoryWidget extends StatelessWidget {
-  const CategoryWidget({super.key});
+  const CategoryWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,27 +24,46 @@ class CategoryWidget extends StatelessWidget {
         }
 
         return GridView.builder(
-            shrinkWrap: true,
-            itemCount: snapshot.data!.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 6, mainAxisSpacing: 8, crossAxisSpacing: 8),
-            itemBuilder: (context, index) {
-              final categoryData = snapshot.data![index];
-              return Column(
+          shrinkWrap: true,
+          itemCount: snapshot.data!.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // Mengubah jumlah kolom menjadi 2
+            mainAxisSpacing: 16, // Mengatur jarak vertikal antara item
+            crossAxisSpacing: 16, // Mengatur jarak horizontal antara item
+            childAspectRatio: 1.0, // Mengatur perbandingan lebar-tinggi item
+          ),
+          itemBuilder: (context, index) {
+            final categoryData = snapshot.data![index];
+            return Card(
+              elevation: 4, // Mengatur elevasi kartu
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(8), // Mengatur sudut melengkung kartu
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 100,
-                    width: 100,
+                    height: 500,
+                    width: 500,
                     child: Image.network(
                       categoryData.image,
+                      fit: BoxFit.cover, // Mengatur tipe pemadatan gambar
                     ),
                   ),
+                  SizedBox(height: 8),
                   Text(
                     categoryData.categoryName,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
-              );
-            });
+              ),
+            );
+          },
+        );
       },
     );
   }

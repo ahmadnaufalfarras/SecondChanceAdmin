@@ -14,6 +14,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int buyerCount = 0;
   int orderCount = 0;
   int productCount = 0;
+  int bannerCount = 0;
+  int categoryCount = 0;
 
   @override
   void initState() {
@@ -38,6 +40,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       QuerySnapshot productSnapshot =
           await FirebaseFirestore.instance.collection('products').get();
       productCount = productSnapshot.docs.length;
+
+      QuerySnapshot bannerSnapshot =
+          await FirebaseFirestore.instance.collection('banners').get();
+      bannerCount = bannerSnapshot.docs.length;
+
+      QuerySnapshot categorySnapshot =
+          await FirebaseFirestore.instance.collection('categories').get();
+      categoryCount = categorySnapshot.docs.length;
 
       // Memperbarui state untuk memicu pembaruan UI
       setState(() {});
@@ -77,6 +87,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         productCount),
                     buildCard(
                         Icons.shopping_cart, Colors.green, 'Order', orderCount),
+                    buildCard(Icons.flag, Colors.purple, 'Banner', bannerCount),
+                    buildCard(Icons.category, Colors.yellow.shade600,
+                        'Category', categoryCount),
                   ],
                 ),
               ),

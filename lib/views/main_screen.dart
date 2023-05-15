@@ -60,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
                 label: Text('Vendors'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.money),
+                icon: Icon(Icons.attach_money),
                 label: Text('Withdrawal'),
               ),
               NavigationRailDestination(
@@ -76,7 +76,7 @@ class _MainScreenState extends State<MainScreen> {
                 label: Text('Products'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.route),
+                icon: Icon(Icons.flag),
                 label: Text('Banners'),
               ),
             ],
