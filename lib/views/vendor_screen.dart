@@ -28,13 +28,16 @@ class VendorScreen extends StatelessWidget {
               cells: [
                 DataCell(Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 50,
-                    width: 50,
-                    child: vendorData.storeImage.isNotEmpty
-                        ? Image.network(vendorData.storeImage)
-                        : Text('-'),
-                  ),
+                  child: vendorData.storeImage.isNotEmpty
+                      ? Container(
+                          height: 50,
+                          width: 50,
+                          child: Image.network(vendorData.storeImage),
+                        )
+                      : Text(
+                          'No Image',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                 )),
                 DataCell(Text(
                     vendorData.businessName.isNotEmpty

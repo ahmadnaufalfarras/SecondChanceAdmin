@@ -29,13 +29,15 @@ class BuyerScreen extends StatelessWidget {
                 DataCell(
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      child: buyerData.profileImage.isNotEmpty
-                          ? Image.network(buyerData.profileImage)
-                          : Text('-'),
-                    ),
+                    child: buyerData.profileImage.isNotEmpty
+                        ? Container(
+                            height: 50,
+                            width: 50,
+                            child: Image.network(buyerData.profileImage))
+                        : Text(
+                            'No Image',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                   ),
                 ),
                 DataCell(Text(

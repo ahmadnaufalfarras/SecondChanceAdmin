@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:second_chance_admin/controllers/product_controller.dart';
 import 'package:second_chance_admin/models/product_model.dart';
 
@@ -28,13 +29,15 @@ class ProductScreen extends StatelessWidget {
               cells: [
                 DataCell(Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 50,
-                    width: 50,
-                    child: productData.imageUrlList.isNotEmpty
-                        ? Image.network(productData.imageUrlList[0])
-                        : Text('-'),
-                  ),
+                  child: productData.imageUrlList.isNotEmpty
+                      ? Container(
+                          height: 50,
+                          width: 50,
+                          child: Image.network(productData.imageUrlList[0]))
+                      : Text(
+                          'No Image',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                 )),
                 DataCell(Text(
                   productData.productName.isNotEmpty
@@ -50,6 +53,11 @@ class ProductScreen extends StatelessWidget {
                   productData.category.isNotEmpty ? productData.category : '-',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
+                DataCell(Text(
+                    DateFormat('dd MMM yyyy hh:mm a').format(
+                      productData.productAddedDate.toDate(),
+                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(productData.approved == false
                     ? ElevatedButton(
                         onPressed: () {
@@ -95,6 +103,7 @@ class ProductScreen extends StatelessWidget {
                       DataColumn(label: Text('PRODUCT NAME')),
                       DataColumn(label: Text('PRODUCT PRICE')),
                       DataColumn(label: Text('CATEGORY')),
+                      DataColumn(label: Text('ADDED DATE')),
                       DataColumn(label: Text('ACTION')),
                     ],
                     rows: dataRows,
