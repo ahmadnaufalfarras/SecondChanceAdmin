@@ -15,7 +15,7 @@ class BannerController {
   final TextEditingController fileNameController = TextEditingController();
 
   Uint8List? image;
-  String fileName = Uuid().v4();
+  String bannerId = Uuid().v4();
 
   Function(Uint8List?)? onImageSelected;
 
@@ -40,9 +40,8 @@ class BannerController {
   Future<String?> uploadBannerToStorage() async {
     String? imageUrl;
     if (image != null) {
-      final fileName = Uuid().v4();
       imageUrl = await _firebaseStorageService.uploadImageFileToStorage(
-          image!, 'banners', fileName);
+          image!, 'banners', bannerId);
     }
     return imageUrl;
   }
@@ -51,13 +50,13 @@ class BannerController {
     EasyLoading.show();
     final imageUrl = await uploadBannerToStorage();
     if (imageUrl != null) {
-      final banner = BannerDataModel(image: imageUrl);
+      final banner = BannerDataModel(bannerId: bannerId, image: imageUrl);
       await _firestore
           .collection('banners')
-          .doc(fileName)
+          .doc(bannerId)
           .set(banner.toJson())
           .whenComplete(() {
-        fileName = Uuid().v4();
+        bannerId = Uuid().v4();
         EasyLoading.dismiss();
         refreshPage(context);
       });
@@ -75,6 +74,14 @@ class BannerController {
           duration: Duration(seconds: 2),
         ),
       );
+    }
+  }
+
+  Future<void> deleteBanner(String bannerId) async {
+    try {
+      await _firestore.collection('banners').doc(bannerId).delete();
+    } catch (error) {
+      Text('Failed to delete banner: $error');
     }
   }
 }

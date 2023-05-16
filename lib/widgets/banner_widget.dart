@@ -25,25 +25,63 @@ class BannerWidget extends StatelessWidget {
           );
         }
 
-        return GridView.builder(
-          shrinkWrap: true,
-          itemCount: snapshot.data!.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 6, mainAxisSpacing: 8, crossAxisSpacing: 8),
-          itemBuilder: (context, index) {
-            final bannerData = snapshot.data![index];
-            return Column(
-              children: [
-                SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Image.network(
-                    bannerData.image,
-                  ),
+        return Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: GridView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data!.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 2.2),
+            itemBuilder: (context, index) {
+              final bannerData = snapshot.data![index];
+              return Card(
+                elevation: 2, // Mengatur elevasi kartu
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      8), // Mengatur sudut melengkung kartu
                 ),
-              ],
-            );
-          },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          topRight: Radius.circular(5),
+                        ),
+                        child: SizedBox(
+                          height: 100,
+                          width: double.infinity,
+                          child: Image.network(
+                            bannerData.image,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _bannerController.deleteBanner(bannerData.bannerId);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red.shade900,
+                        ),
+                        child: Text('Delete'),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         );
       },
     );

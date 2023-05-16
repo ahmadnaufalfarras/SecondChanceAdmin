@@ -15,7 +15,7 @@ class CategoryController {
   final TextEditingController fileNameController = TextEditingController();
 
   Uint8List? image;
-  String fileName = Uuid().v4();
+  String categoryId = Uuid().v4();
 
   Function(Uint8List?)? onImageSelected;
 
@@ -40,9 +40,8 @@ class CategoryController {
   Future<String?> uploadCategoryToStorage() async {
     String? imageUrl;
     if (image != null) {
-      final fileName = Uuid().v4();
       imageUrl = await _firebaseStorageService
-          .uploadImageFileToStorage(image!, 'categoryImages', fileName)
+          .uploadImageFileToStorage(image!, 'categoryImages', categoryId)
           .whenComplete(() => imageUrl = null);
     }
     return imageUrl;
@@ -53,15 +52,15 @@ class CategoryController {
     EasyLoading.show();
     var imageUrl = await uploadCategoryToStorage();
     if (imageUrl != null) {
-      final category =
-          CategoryDataModel(image: imageUrl, categoryName: categoryName);
+      final category = CategoryDataModel(
+          categoryId: categoryId, image: imageUrl, categoryName: categoryName);
       await _firestore
           .collection('categories')
-          .doc(fileName)
+          .doc(categoryId)
           .set(category.toJson())
           .whenComplete(() {
         _formKey.currentState!.reset();
-        fileName = Uuid().v4();
+        categoryId = Uuid().v4();
         imageUrl = null;
         EasyLoading.dismiss();
         refreshPage(context);
@@ -80,6 +79,14 @@ class CategoryController {
           duration: Duration(seconds: 2),
         ),
       );
+    }
+  }
+
+  Future<void> deleteCategory(String categoryId) async {
+    try {
+      await _firestore.collection('categories').doc(categoryId).delete();
+    } catch (error) {
+      Text('Failed to delete category: $error');
     }
   }
 }

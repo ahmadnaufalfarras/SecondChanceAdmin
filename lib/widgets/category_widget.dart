@@ -23,46 +23,65 @@ class CategoryWidget extends StatelessWidget {
           );
         }
 
-        return GridView.builder(
-          shrinkWrap: true,
-          itemCount: snapshot.data!.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Mengubah jumlah kolom menjadi 2
-            mainAxisSpacing: 16, // Mengatur jarak vertikal antara item
-            crossAxisSpacing: 16, // Mengatur jarak horizontal antara item
-            childAspectRatio: 1.0, // Mengatur perbandingan lebar-tinggi item
+        return Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: GridView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data!.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4, // Mengubah jumlah kolom menjadi 2
+              mainAxisSpacing: 20, // Mengatur jarak vertikal antara item
+              crossAxisSpacing: 20, // Mengatur jarak horizontal antara item
+              childAspectRatio: 1.0, // Mengatur perbandingan lebar-tinggi item
+            ),
+            itemBuilder: (context, index) {
+              final categoryData = snapshot.data![index];
+              return Card(
+                elevation: 4, // Mengatur elevasi kartu
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      8), // Mengatur sudut melengkung kartu
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: SizedBox(
+                        height: 200,
+                        width: 250,
+                        child: Image.network(
+                          categoryData.image,
+                          fit: BoxFit.cover, // Mengatur tipe pemadatan gambar
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      categoryData.categoryName,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _categoryController
+                            .deleteCategory(categoryData.categoryId);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red.shade900,
+                      ),
+                      child: Text('Delete'),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-          itemBuilder: (context, index) {
-            final categoryData = snapshot.data![index];
-            return Card(
-              elevation: 4, // Mengatur elevasi kartu
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(8), // Mengatur sudut melengkung kartu
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 500,
-                    width: 500,
-                    child: Image.network(
-                      categoryData.image,
-                      fit: BoxFit.cover, // Mengatur tipe pemadatan gambar
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    categoryData.categoryName,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
         );
       },
     );

@@ -52,7 +52,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       // Memperbarui state untuk memicu pembaruan UI
       setState(() {});
     } catch (error) {
-      print('Terjadi kesalahan saat mengambil data: $error');
+      Text('Terjadi kesalahan saat mengambil data: $error');
     }
   }
 
@@ -76,21 +76,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               SizedBox(height: 30),
               Expanded(
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  childAspectRatio: 3.0,
-                  children: [
-                    buildCard(Icons.store, Colors.black, 'Vendor', vendorCount),
-                    buildCard(Icons.person, Colors.red, 'Buyer', buyerCount),
-                    buildCard(Icons.inventory_2, Colors.blue, 'Product',
-                        productCount),
-                    buildCard(
-                        Icons.shopping_cart, Colors.green, 'Order', orderCount),
-                    buildCard(Icons.flag, Colors.purple, 'Banner', bannerCount),
-                    buildCard(Icons.category, Colors.yellow.shade600,
-                        'Category', categoryCount),
-                  ],
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.5,
+                    children: [
+                      buildCard(
+                          Icons.store, Colors.black, 'Vendor', vendorCount),
+                      buildCard(Icons.person, Colors.red, 'Buyer', buyerCount),
+                      buildCard(Icons.inventory_2, Colors.blue, 'Product',
+                          productCount),
+                      buildCard(Icons.shopping_cart, Colors.green, 'Order',
+                          orderCount),
+                      buildCard(
+                          Icons.flag, Colors.purple, 'Banner', bannerCount),
+                      buildCard(Icons.category, Colors.yellow.shade600,
+                          'Category', categoryCount),
+                    ],
+                  ),
                 ),
               ),
             ],
