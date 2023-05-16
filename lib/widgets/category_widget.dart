@@ -69,8 +69,53 @@ class CategoryWidget extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _categoryController
-                            .deleteCategory(categoryData.categoryId);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Delete Category'),
+                              content: Text(
+                                  'Are you sure you want to delete ${categoryData.categoryName}?'),
+                              actions: [
+                                TextButton(
+                                  child: Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text('Delete'),
+                                  onPressed: () async {
+                                    try {
+                                      await _categoryController.deleteCategory(
+                                          categoryData.categoryId);
+                                      Navigator.of(context).pop();
+                                    } catch (e) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Error'),
+                                            content: Text(
+                                                'Failed to delete category. Please try again later.'),
+                                            actions: [
+                                              TextButton(
+                                                child: Text('OK'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red.shade900,
