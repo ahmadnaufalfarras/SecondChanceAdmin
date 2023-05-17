@@ -36,151 +36,123 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                margin: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'Select an Categories Image to Upload',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              margin: const EdgeInsets.only(left: 20, top: 20),
+              child: const Text(
+                'Select an Categories Image to Upload',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 500),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Container(
-                        height: 200,
-                        width: 200,
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 140,
+                        width: 140,
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                          ),
+                          color: Colors.white,
+                          border: Border.all(color: Colors.grey.shade900),
                           borderRadius: BorderRadius.circular(10),
-                          image: _selectedImage == null
-                              ? null
-                              : DecorationImage(
-                                  image: MemoryImage(_selectedImage!),
-                                  fit: BoxFit.cover,
-                                ),
                         ),
-                        child: _selectedImage == null
-                            ? Center(
-                                child: Text(
-                                  'No image selected',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                        child: _selectedImage != null
+                            ? Image.memory(
+                                _selectedImage!,
+                                fit: BoxFit.cover,
                               )
-                            : null,
+                            : Center(
+                                child: Text('+Add Category'),
+                              ),
                       ),
-                    ),
-                    Flexible(
-                      child: SizedBox(
-                        width: 250,
-                        child: TextFormField(
-                          onChanged: (value) {
-                            categoryName = value;
-                          },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please Category Name must not be empty';
-                            } else {
-                              return null;
-                            }
-                          },
-                          decoration: InputDecoration(
-                            labelText: 'Enter Category Name',
-                            hintText: 'Enter Category Name',
-                          ),
-                        ),
+                      SizedBox(
+                        height: 20,
                       ),
-                    ),
-                  ],
+                      ElevatedButton(
+                          onPressed: () {
+                            _categoryController.pickCategoryImage();
+                          },
+                          child: Text('Upload Image'))
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _categoryController.pickCategoryImage();
+                Flexible(
+                  child: SizedBox(
+                    width: 250,
+                    child: TextFormField(
+                      onChanged: (value) {
+                        categoryName = value;
                       },
-                      child: Text('Upload Image'),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _categoryController
-                              .uploadCategory(context, categoryName!, _formKey)
-                              .then((value) {
-                            setState(() {
-                              _selectedImage = null;
-                              categoryName = null;
-                            });
-                          });
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please Category Name must not be empty';
+                        } else {
+                          return null;
                         }
                       },
-                      child: Text('Save'),
+                      decoration: InputDecoration(
+                        labelText: 'Enter Category Name',
+                        hintText: 'Enter Category Name',
+                      ),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Divider(
+                ),
+                SizedBox(
+                  width: 30,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _categoryController
+                          .uploadCategory(context, categoryName!, _formKey)
+                          .then((value) {
+                        setState(() {
+                          _selectedImage = null;
+                          categoryName = null;
+                        });
+                      });
+                    }
+                  },
+                  child: Text('Save'),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Divider(
                 thickness: 2,
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Uploaded Categories',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Uploaded Categories',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              CategoryWidget(),
-            ],
-          ),
+            ),
+            CategoryWidget(),
+          ],
         ),
       ),
     );
