@@ -40,7 +40,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
               alignment: Alignment.topLeft,
               margin: const EdgeInsets.only(left: 20),
               child: Text(
-                'Select an Image to Upload',
+                'Select an Banner Image to Upload',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -91,7 +91,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                     onPressed: () {
                       _bannerController.pickBannerImage();
                     },
-                    child: Text('Select Image'),
+                    child: Text('Upload Image'),
                   ),
                 ),
                 SizedBox(
@@ -107,7 +107,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                         });
                       });
                     },
-                    child: Text('Upload'),
+                    child: Text('Save'),
                   ),
                 ),
               ],

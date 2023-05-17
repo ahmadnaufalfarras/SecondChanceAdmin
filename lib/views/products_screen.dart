@@ -46,7 +46,7 @@ class ProductScreen extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
                 DataCell(Text(
-                  productData.productPrice.toString(),
+                  '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(productData.productPrice)}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
                 DataCell(Text(
@@ -58,19 +58,10 @@ class ProductScreen extends StatelessWidget {
                       productData.productAddedDate.toDate(),
                     ),
                     style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(productData.approved == false
-                    ? ElevatedButton(
-                        onPressed: () {
-                          _productController
-                              .approveProduct(productData.productId);
-                        },
-                        child: Text('Approved'))
-                    : ElevatedButton(
-                        onPressed: () {
-                          _productController
-                              .rejectProduct(productData.productId);
-                        },
-                        child: Text('Reject'))),
+                DataCell(Text(
+                  productData.approved == false ? 'Unpublished' : 'Published',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                )),
               ],
             );
           }).toList();
@@ -104,7 +95,7 @@ class ProductScreen extends StatelessWidget {
                       DataColumn(label: Text('PRODUCT PRICE')),
                       DataColumn(label: Text('CATEGORY')),
                       DataColumn(label: Text('ADDED DATE')),
-                      DataColumn(label: Text('ACTION')),
+                      DataColumn(label: Text('STATUS')),
                     ],
                     rows: dataRows,
                   ),
