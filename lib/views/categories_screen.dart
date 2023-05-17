@@ -61,11 +61,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   child: Column(
                     children: [
                       Container(
-                        height: 140,
-                        width: 140,
+                        height: 180,
+                        width: 180,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.grey.shade900),
+                          border: Border.all(color: Colors.grey.shade300),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: _selectedImage != null
@@ -74,7 +73,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 fit: BoxFit.cover,
                               )
                             : Center(
-                                child: Text('+Add Category'),
+                                child: Text(
+                                  'No image selected',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                       ),
                       SizedBox(
@@ -103,9 +109,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         }
                       },
                       decoration: InputDecoration(
-                        labelText: 'Enter Category Name',
-                        hintText: 'Enter Category Name',
-                      ),
+                          labelText: 'Enter Category Name',
+                          hintText: 'Enter Category Name',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          )),
                     ),
                   ),
                 ),

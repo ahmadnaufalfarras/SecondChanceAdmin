@@ -53,7 +53,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
-                height: 150,
+                height: 200,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.grey.shade300,
@@ -95,7 +95,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
