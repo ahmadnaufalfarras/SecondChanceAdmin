@@ -82,11 +82,27 @@ class CategoryController {
     }
   }
 
-  Future<void> deleteCategory(String categoryId) async {
+  Future<void> deleteCategory(
+      BuildContext context, String categoryId, String categoryName) async {
     try {
-      await _firestore.collection('categories').doc(categoryId).delete();
+      final categoryRef = _firestore.collection('categories').doc(categoryId);
+      final productsSnapshot = await _firestore
+          .collection('products')
+          .where('category', isEqualTo: categoryName)
+          .get();
+
+      if (productsSnapshot.docs.isNotEmpty) {
+        throw Exception(
+          'Cannot delete category. Products exist with this category.',
+        );
+      }
+
+      await categoryRef.delete();
     } catch (error) {
-      Text('Failed to delete category: $error');
+      final snackBar = SnackBar(
+        content: Text('Failed to delete category: $error'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 }

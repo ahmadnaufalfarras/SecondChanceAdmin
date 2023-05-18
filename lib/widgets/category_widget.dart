@@ -86,30 +86,11 @@ class CategoryWidget extends StatelessWidget {
                                 TextButton(
                                   child: Text('Delete'),
                                   onPressed: () async {
-                                    try {
-                                      await _categoryController.deleteCategory(
-                                          categoryData.categoryId);
-                                      Navigator.of(context).pop();
-                                    } catch (e) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('Error'),
-                                            content: Text(
-                                                'Failed to delete category. Please try again later.'),
-                                            actions: [
-                                              TextButton(
-                                                child: Text('OK'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }
+                                    await _categoryController.deleteCategory(
+                                        context,
+                                        categoryData.categoryId,
+                                        categoryData.categoryName);
+                                    Navigator.of(context).pop();
                                   },
                                 ),
                               ],
