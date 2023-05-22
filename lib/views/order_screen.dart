@@ -36,13 +36,17 @@ class OrderScreen extends StatelessWidget {
                     ),
                     style: TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(Text(
-                    orderData.productId.isNotEmpty ? orderData.productId : '-',
+                    orderData.productName.isNotEmpty
+                        ? orderData.productName
+                        : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(Text(
-                    orderData.buyerId.isNotEmpty ? orderData.buyerId : '-',
+                    orderData.fullName.isNotEmpty ? orderData.fullName : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(Text(
-                    orderData.vendorId.isNotEmpty ? orderData.vendorId : '-',
+                    orderData.businessName.isNotEmpty
+                        ? orderData.businessName
+                        : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
               ],
             );
@@ -74,9 +78,9 @@ class OrderScreen extends StatelessWidget {
                     columns: const [
                       DataColumn(label: Text('ORDER ID')),
                       DataColumn(label: Text('ORDER DATE')),
-                      DataColumn(label: Text('PRODUCT ID')),
-                      DataColumn(label: Text('BUYER ID')),
-                      DataColumn(label: Text('VENDOR ID')),
+                      DataColumn(label: Text('PRODUCT NAME')),
+                      DataColumn(label: Text('BUYER NAME')),
+                      DataColumn(label: Text('VENDOR NAME')),
                     ],
                     rows: dataRows,
                   ),
