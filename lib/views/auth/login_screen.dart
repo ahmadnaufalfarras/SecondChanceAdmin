@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:second_chance_admin/controllers/auth_controller.dart';
 import 'package:second_chance_admin/theme.dart';
 import 'package:second_chance_admin/utils/button_global.dart';
 import 'package:second_chance_admin/utils/show_dialog.dart';
@@ -14,37 +15,41 @@ class AdminLoginScreen extends StatefulWidget {
 
 class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final AuthController _authController = AuthController();
+
+  late String email;
+  late String password;
 
   bool _isLoading = false;
 
-  void _loginUsers() {
-    String username = _usernameController.text;
-    String password = _passwordController.text;
+  Future<void> _loginUsers() async {
     setState(() {
       _isLoading = true;
     });
-    if (username == 'admin1' && password == 'admin123') {
+
+    try {
+      await _authController.loginUsers(email, password);
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(),
-        ),
+        MaterialPageRoute(builder: (BuildContext context) {
+          return MainScreen();
+        }),
       );
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
+    } catch (error) {
       displayDialog(
         context,
-        'Username or password is wrong. Try Again.',
+        error.toString(),
         Icon(
           Icons.error,
-          color: primaryColor,
+          color: Colors.red,
           size: 60,
         ),
       );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -81,19 +86,25 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     height: 20,
                   ),
                   TextFormGlobal(
-                    controller: _usernameController,
                     text: 'Email',
                     textInputType: TextInputType.emailAddress,
+                    onChanged: (value) {
+                      email = value;
+                      return null;
+                    },
                     context: context,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   TextFormGlobal(
-                    controller: _passwordController,
                     text: 'Password',
                     textInputType: TextInputType.text,
                     obsecure: true,
+                    onChanged: (value) {
+                      password = value;
+                      return null;
+                    },
                     context: context,
                   ),
                   SizedBox(
