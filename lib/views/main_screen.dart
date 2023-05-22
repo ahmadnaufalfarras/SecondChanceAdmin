@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:second_chance_admin/views/auth/logout_screen.dart';
 import 'package:second_chance_admin/views/buyer_screen.dart';
 import 'package:second_chance_admin/views/categories_screen.dart';
 import 'package:second_chance_admin/views/dashboard_screen.dart';
@@ -27,6 +28,7 @@ class _MainScreenState extends State<MainScreen> {
     CategoriesScreen(),
     ProductScreen(),
     UploadBannerScreen(),
+    AdminLogoutScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -78,6 +80,10 @@ class _MainScreenState extends State<MainScreen> {
               NavigationRailDestination(
                 icon: Icon(Icons.flag),
                 label: Text('Banners'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.logout),
+                label: Text('Logout'),
               ),
             ],
           ),
