@@ -6,8 +6,8 @@ import 'package:second_chance_admin/views/dashboard_screen.dart';
 import 'package:second_chance_admin/views/order_screen.dart';
 import 'package:second_chance_admin/views/products_screen.dart';
 import 'package:second_chance_admin/views/upload_banner_screen.dart';
+import 'package:second_chance_admin/views/vendor_bank_screen.dart';
 import 'package:second_chance_admin/views/vendor_screen.dart';
-import 'package:second_chance_admin/views/withdrawal_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
     DashboardScreen(),
     BuyerScreen(),
     VendorScreen(),
-    WithdrawalScreen(),
+    VendorBankScreen(),
     OrderScreen(),
     CategoriesScreen(),
     ProductScreen(),
@@ -62,8 +62,8 @@ class _MainScreenState extends State<MainScreen> {
                 label: Text('Vendors'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.attach_money),
-                label: Text('Withdrawal'),
+                icon: Icon(Icons.attach_money_sharp),
+                label: Text('Vendors Bank'),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.shopping_cart),
