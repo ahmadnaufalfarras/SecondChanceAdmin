@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:second_chance_admin/views/auth/logout_screen.dart';
+import 'package:second_chance_admin/views/buyer_bank_screen.dart';
 import 'package:second_chance_admin/views/buyer_screen.dart';
 import 'package:second_chance_admin/views/categories_screen.dart';
 import 'package:second_chance_admin/views/dashboard_screen.dart';
@@ -22,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> _widgetOptions = <Widget>[
     DashboardScreen(),
     BuyerScreen(),
+    BuyerBankScreen(),
     VendorScreen(),
     VendorBankScreen(),
     OrderScreen(),
@@ -58,11 +60,15 @@ class _MainScreenState extends State<MainScreen> {
                 label: Text('Buyers'),
               ),
               NavigationRailDestination(
+                icon: Icon(Icons.monetization_on_outlined),
+                label: Text('Buyers Bank'),
+              ),
+              NavigationRailDestination(
                 icon: Icon(Icons.store),
                 label: Text('Vendors'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.attach_money_sharp),
+                icon: Icon(Icons.monetization_on_rounded),
                 label: Text('Vendors Bank'),
               ),
               NavigationRailDestination(

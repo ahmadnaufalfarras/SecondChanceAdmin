@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class VendorDataModel {
   final String storeImage;
   final String businessName;
@@ -9,6 +11,7 @@ class VendorDataModel {
   final String vendorBankAccountName;
   final String vendorBankAccountNumber;
   final bool approved;
+  final Timestamp vendorRegisteredDate;
   final String vendorId;
 
   VendorDataModel({
@@ -22,6 +25,7 @@ class VendorDataModel {
     required this.vendorBankAccountName,
     required this.vendorBankAccountNumber,
     required this.approved,
+    required this.vendorRegisteredDate,
     required this.vendorId,
   });
 
@@ -37,6 +41,7 @@ class VendorDataModel {
       vendorBankAccountName: map['vendorBankAccountName'] ?? '-',
       vendorBankAccountNumber: map['vendorBankAccountNumber'] ?? '-',
       approved: map['approved'] ?? false,
+      vendorRegisteredDate: map['vendorRegisteredDate'] ?? '-',
       vendorId: map['vendorId'] ?? '-',
     );
   }

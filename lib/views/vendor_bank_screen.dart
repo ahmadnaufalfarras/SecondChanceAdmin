@@ -2,16 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:second_chance_admin/controllers/vendor_controller.dart';
 import 'package:second_chance_admin/models/vendor_model.dart';
 
-class VendorBankScreen extends StatelessWidget {
+class VendorBankScreen extends StatefulWidget {
   static const String routeName = '\VendorBankScreen';
 
-  final VendorBankController _vendorBankController = VendorBankController();
+  @override
+  State<VendorBankScreen> createState() => _VendorBankScreenState();
+}
+
+class _VendorBankScreenState extends State<VendorBankScreen> {
+  final VendorController _vendorController = VendorController();
+
+  int currentPage = 1;
+
+  int maxPerPage = 10;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<List<VendorDataModel>>(
-        stream: _vendorBankController.getVendorData(),
+        stream: _vendorController.getVendorData(),
         builder: (BuildContext context,
             AsyncSnapshot<List<VendorDataModel>> snapshot) {
           if (snapshot.hasError) {
@@ -22,8 +31,20 @@ class VendorBankScreen extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
+          final sortedData = snapshot.data!.toList()
+            ..sort((a, b) => a.businessName
+                .toLowerCase()
+                .compareTo(b.businessName.toLowerCase()));
+
+          final totalItems = sortedData.length;
+          final maxPages = (totalItems / maxPerPage).ceil();
+          final startIndex = (currentPage - 1) * maxPerPage;
+          final endIndex = startIndex + maxPerPage;
+          final displayedData = sortedData.sublist(
+              startIndex.clamp(0, totalItems), endIndex.clamp(0, totalItems));
+
           final dataRows =
-              snapshot.data!.map<DataRow>((VendorDataModel vendorData) {
+              displayedData.map<DataRow>((VendorDataModel vendorData) {
             return DataRow(
               cells: [
                 DataCell(Text(
@@ -51,40 +72,68 @@ class VendorBankScreen extends StatelessWidget {
           }).toList();
 
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 60),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(10),
-                  child: const Text(
-                    'Manage Vendors Bank',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 36,
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 60),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(10),
+                      child: const Text(
+                        'Manage Vendors Bank',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 36,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Expanded(
-                  child: DataTable(
-                    headingRowColor: MaterialStateProperty.resolveWith(
-                        (states) => Colors.grey.shade200),
-                    columns: const [
-                      DataColumn(label: Text('BUSINESS NAME')),
-                      DataColumn(label: Text('BANK NAME')),
-                      DataColumn(label: Text('BANK ACCOUNT NAME')),
-                      DataColumn(label: Text('BANK ACCOUNT NUMBER')),
-                    ],
-                    rows: dataRows,
-                  ),
-                ),
-              ],
-            ),
-          );
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Expanded(
+                      child: DataTable(
+                        headingRowColor: MaterialStateProperty.resolveWith(
+                            (states) => Colors.grey.shade200),
+                        columns: const [
+                          DataColumn(label: Text('BUSINESS NAME')),
+                          DataColumn(label: Text('BANK NAME')),
+                          DataColumn(label: Text('BANK ACCOUNT NAME')),
+                          DataColumn(label: Text('BANK ACCOUNT NUMBER')),
+                        ],
+                        rows: dataRows,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.arrow_left),
+                          onPressed: currentPage > 1
+                              ? () {
+                                  setState(() {
+                                    currentPage--;
+                                  });
+                                }
+                              : null,
+                        ),
+                        Text(
+                          'Page $currentPage of $maxPages',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.arrow_right),
+                          onPressed: currentPage < maxPages
+                              ? () {
+                                  setState(() {
+                                    currentPage++;
+                                  });
+                                }
+                              : null,
+                        ),
+                      ],
+                    ),
+                  ]));
         },
       ),
     );

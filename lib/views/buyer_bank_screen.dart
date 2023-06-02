@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:second_chance_admin/controllers/order_controller.dart';
-import 'package:second_chance_admin/models/order_model.dart';
+import 'package:second_chance_admin/controllers/buyer_controller.dart';
+import 'package:second_chance_admin/models/buyer_model.dart';
 
-class OrderScreen extends StatefulWidget {
-  static const String routeName = '\OrderScreen';
+class BuyerBankScreen extends StatefulWidget {
+  static const String routeName = '\BuyerBankScreen';
 
   @override
-  State<OrderScreen> createState() => _OrderScreenState();
+  State<BuyerBankScreen> createState() => _BuyerBankScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
-  final OrderController _orderController = OrderController();
+class _BuyerBankScreenState extends State<BuyerBankScreen> {
+  final BuyerController _buyerController = BuyerController();
 
   int currentPage = 1;
 
@@ -20,10 +19,10 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<List<OrderDataModel>>(
-        stream: _orderController.getOrderData(),
+      body: StreamBuilder<List<BuyerDataModel>>(
+        stream: _buyerController.getBuyerData(),
         builder: (BuildContext context,
-            AsyncSnapshot<List<OrderDataModel>> snapshot) {
+            AsyncSnapshot<List<BuyerDataModel>> snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
@@ -32,8 +31,9 @@ class _OrderScreenState extends State<OrderScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final sortedData = List<OrderDataModel>.from(snapshot.data!);
-          sortedData.sort((a, b) => b.orderDate.compareTo(a.orderDate));
+          final sortedData = snapshot.data!.toList()
+            ..sort((a, b) =>
+                a.fullName.toLowerCase().compareTo(b.fullName.toLowerCase()));
 
           final totalItems = sortedData.length;
           final maxPages = (totalItems / maxPerPage).ceil();
@@ -43,40 +43,23 @@ class _OrderScreenState extends State<OrderScreen> {
               startIndex.clamp(0, totalItems), endIndex.clamp(0, totalItems));
 
           final dataRows =
-              displayedData.map<DataRow>((OrderDataModel orderData) {
+              displayedData.map<DataRow>((BuyerDataModel buyerData) {
             return DataRow(
               cells: [
-                DataCell(Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: orderData.productImage.isNotEmpty
-                      ? Container(
-                          height: 50,
-                          width: 50,
-                          child: Image.network(orderData.productImage[0]))
-                      : Text(
-                          'No Image',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                )),
                 DataCell(Text(
-                    DateFormat('dd MMM yyyy hh:mm a').format(
-                      orderData.orderDate.toDate(),
-                    ),
+                    buyerData.fullName.isNotEmpty ? buyerData.fullName : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(Text(
-                    orderData.productName.isNotEmpty
-                        ? orderData.productName
+                    buyerData.bankName.isNotEmpty ? buyerData.bankName : '-',
+                    style: TextStyle(fontWeight: FontWeight.bold))),
+                DataCell(Text(
+                    buyerData.bankAccountName.isNotEmpty
+                        ? buyerData.bankAccountName
                         : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
                 DataCell(Text(
-                    orderData.status.isNotEmpty ? orderData.status : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    orderData.fullName.isNotEmpty ? orderData.fullName : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    orderData.businessName.isNotEmpty
-                        ? orderData.businessName
+                    buyerData.bankAccountNumber.isNotEmpty
+                        ? buyerData.bankAccountName
                         : '-',
                     style: TextStyle(fontWeight: FontWeight.bold))),
               ],
@@ -92,7 +75,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(10),
                       child: const Text(
-                        'Manage Orders',
+                        'Manage Buyers Bank',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 36,
@@ -107,12 +90,10 @@ class _OrderScreenState extends State<OrderScreen> {
                         headingRowColor: MaterialStateProperty.resolveWith(
                             (states) => Colors.grey.shade200),
                         columns: const [
-                          DataColumn(label: Text('IMAGE')),
-                          DataColumn(label: Text('ORDER DATE')),
-                          DataColumn(label: Text('PRODUCT NAME')),
-                          DataColumn(label: Text('STATUS')),
                           DataColumn(label: Text('BUYER NAME')),
-                          DataColumn(label: Text('VENDOR NAME')),
+                          DataColumn(label: Text('BANK NAME')),
+                          DataColumn(label: Text('BANK ACCOUNT NAME')),
+                          DataColumn(label: Text('BANK ACCOUNT NUMBER')),
                         ],
                         rows: dataRows,
                       ),
