@@ -31,10 +31,10 @@ class _VendorBankScreenState extends State<VendorBankScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final sortedData = snapshot.data!.toList()
-            ..sort((a, b) => a.businessName
-                .toLowerCase()
-                .compareTo(b.businessName.toLowerCase()));
+          final sortedData = List<VendorDataModel>.from(snapshot.data!);
+          sortedData.sort((a, b) => a.businessName
+              .toLowerCase()
+              .compareTo(b.businessName.toLowerCase()));
 
           final totalItems = sortedData.length;
           final maxPages = (totalItems / maxPerPage).ceil();

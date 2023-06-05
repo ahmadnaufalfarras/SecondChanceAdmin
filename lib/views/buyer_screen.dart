@@ -31,9 +31,9 @@ class _BuyerScreenState extends State<BuyerScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final sortedData = snapshot.data!.toList()
-            ..sort((a, b) =>
-                a.fullName.toLowerCase().compareTo(b.fullName.toLowerCase()));
+          final sortedData = List<BuyerDataModel>.from(snapshot.data!);
+          sortedData.sort((a, b) =>
+              a.fullName.toLowerCase().compareTo(b.fullName.toLowerCase()));
 
           final totalItems = sortedData.length;
           final maxPages = (totalItems / maxPerPage).ceil();
