@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:second_chance_admin/authentication_wrapper.dart';
 import 'package:second_chance_admin/controllers/auth_controller.dart';
 import 'package:second_chance_admin/theme.dart';
 import 'package:second_chance_admin/utils/button_global.dart';
 import 'package:second_chance_admin/utils/show_dialog.dart';
 import 'package:second_chance_admin/utils/text_form_global.dart';
-import 'package:second_chance_admin/views/main_screen.dart';
 
 class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({super.key});
@@ -17,8 +17,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AuthController _authController = AuthController();
 
-  late String email;
-  late String password;
+  late String _email;
+  late String _password;
 
   bool _isLoading = false;
 
@@ -28,12 +28,12 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     });
 
     try {
-      await _authController.loginUsers(email, password);
+      await _authController.loginUsers(_email, _password);
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (BuildContext context) {
-          return MainScreen();
+          return AuthenticationWrapper();
         }),
       );
     } catch (error) {
@@ -89,7 +89,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     text: 'Email',
                     textInputType: TextInputType.emailAddress,
                     onChanged: (value) {
-                      email = value;
+                      _email = value;
                       return null;
                     },
                     context: context,
@@ -102,7 +102,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                     textInputType: TextInputType.text,
                     obsecure: true,
                     onChanged: (value) {
-                      password = value;
+                      _password = value;
                       return null;
                     },
                     context: context,

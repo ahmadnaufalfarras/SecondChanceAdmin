@@ -16,7 +16,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   final CategoryController _categoryController = CategoryController();
 
   Uint8List? _selectedImage;
-  String? categoryName;
+  String? _categoryName;
 
   @override
   void initState() {
@@ -99,7 +99,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     width: 250,
                     child: TextFormField(
                       onChanged: (value) {
-                        categoryName = value;
+                        _categoryName = value;
                       },
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -124,11 +124,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _categoryController
-                          .uploadCategory(context, categoryName!, _formKey)
+                          .uploadCategory(context, _categoryName!, _formKey)
                           .then((value) {
                         setState(() {
                           _selectedImage = null;
-                          categoryName = null;
+                          _categoryName = null;
                         });
                       });
                     }

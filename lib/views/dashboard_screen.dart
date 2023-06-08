@@ -10,46 +10,45 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  int vendorCount = 0;
-  int buyerCount = 0;
-  int orderCount = 0;
-  int productCount = 0;
-  int bannerCount = 0;
-  int categoryCount = 0;
+  int _vendorCount = 0;
+  int _buyerCount = 0;
+  int _orderCount = 0;
+  int _productCount = 0;
+  int _bannerCount = 0;
+  int _categoryCount = 0;
 
   @override
   void initState() {
     super.initState();
-    fetchDataCounts();
+    _fetchDataCounts();
   }
 
-  Future<void> fetchDataCounts() async {
+  Future<void> _fetchDataCounts() async {
     try {
       QuerySnapshot vendorSnapshot =
           await FirebaseFirestore.instance.collection('vendors').get();
-      vendorCount = vendorSnapshot.docs.length;
+      _vendorCount = vendorSnapshot.docs.length;
 
       QuerySnapshot buyerSnapshot =
           await FirebaseFirestore.instance.collection('buyers').get();
-      buyerCount = buyerSnapshot.docs.length;
+      _buyerCount = buyerSnapshot.docs.length;
 
       QuerySnapshot orderSnapshot =
           await FirebaseFirestore.instance.collection('orders').get();
-      orderCount = orderSnapshot.docs.length;
+      _orderCount = orderSnapshot.docs.length;
 
       QuerySnapshot productSnapshot =
           await FirebaseFirestore.instance.collection('products').get();
-      productCount = productSnapshot.docs.length;
+      _productCount = productSnapshot.docs.length;
 
       QuerySnapshot bannerSnapshot =
           await FirebaseFirestore.instance.collection('banners').get();
-      bannerCount = bannerSnapshot.docs.length;
+      _bannerCount = bannerSnapshot.docs.length;
 
       QuerySnapshot categorySnapshot =
           await FirebaseFirestore.instance.collection('categories').get();
-      categoryCount = categorySnapshot.docs.length;
+      _categoryCount = categorySnapshot.docs.length;
 
-      // Memperbarui state untuk memicu pembaruan UI
       setState(() {});
     } catch (error) {
       Text('Terjadi kesalahan saat mengambil data: $error');
@@ -84,16 +83,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     childAspectRatio: 1.5,
                     children: [
                       buildCard(
-                          Icons.store, Colors.black, 'Vendor', vendorCount),
-                      buildCard(Icons.person, Colors.red, 'Buyer', buyerCount),
+                          Icons.store, Colors.black, 'Vendor', _vendorCount),
+                      buildCard(Icons.person, Colors.red, 'Buyer', _buyerCount),
                       buildCard(Icons.inventory_2, Colors.blue, 'Product',
-                          productCount),
+                          _productCount),
                       buildCard(Icons.shopping_cart, Colors.green, 'Order',
-                          orderCount),
+                          _orderCount),
                       buildCard(
-                          Icons.flag, Colors.purple, 'Banner', bannerCount),
+                          Icons.flag, Colors.purple, 'Banner', _bannerCount),
                       buildCard(Icons.category, Colors.yellow.shade600,
-                          'Category', categoryCount),
+                          'Category', _categoryCount),
                     ],
                   ),
                 ),

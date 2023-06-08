@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:second_chance_admin/views/auth/login_screen.dart';
+import 'package:second_chance_admin/authentication_wrapper.dart';
+import 'package:second_chance_admin/controllers/auth_controller.dart';
 
 class AdminLogoutScreen extends StatefulWidget {
   const AdminLogoutScreen({super.key});
@@ -11,7 +11,24 @@ class AdminLogoutScreen extends StatefulWidget {
 }
 
 class _AdminLogoutScreenState extends State<AdminLogoutScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final AuthController _controller = AuthController();
+
+  Future<void> _handleLogoutUsers() async {
+    EasyLoading.show(status: 'Logging out');
+
+    await _controller.logoutUsers().whenComplete(() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return AuthenticationWrapper();
+          },
+        ),
+      );
+
+      EasyLoading.dismiss();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +38,7 @@ class _AdminLogoutScreenState extends State<AdminLogoutScreen> {
           onPressed: () async {
             EasyLoading.show(status: 'Logging out');
 
-            await _auth.signOut().whenComplete(
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return AdminLoginScreen();
-                    },
-                  ),
-                );
-
-                EasyLoading.dismiss();
-              },
-            );
+            await _handleLogoutUsers();
           },
           child: Text('Logout'),
         ),

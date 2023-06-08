@@ -12,9 +12,8 @@ class BuyerScreen extends StatefulWidget {
 class _BuyerScreenState extends State<BuyerScreen> {
   final BuyerController _buyerController = BuyerController();
 
-  int currentPage = 1;
-
-  int maxPerPage = 10;
+  int _currentPage = 1;
+  int _maxPerPage = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +35,9 @@ class _BuyerScreenState extends State<BuyerScreen> {
               a.fullName.toLowerCase().compareTo(b.fullName.toLowerCase()));
 
           final totalItems = sortedData.length;
-          final maxPages = (totalItems / maxPerPage).ceil();
-          final startIndex = (currentPage - 1) * maxPerPage;
-          final endIndex = startIndex + maxPerPage;
+          final maxPages = (totalItems / _maxPerPage).ceil();
+          final startIndex = (_currentPage - 1) * _maxPerPage;
+          final endIndex = startIndex + _maxPerPage;
           final displayedData = sortedData.sublist(
               startIndex.clamp(0, totalItems), endIndex.clamp(0, totalItems));
 
@@ -123,24 +122,24 @@ class _BuyerScreenState extends State<BuyerScreen> {
                       children: [
                         IconButton(
                           icon: Icon(Icons.arrow_left),
-                          onPressed: currentPage > 1
+                          onPressed: _currentPage > 1
                               ? () {
                                   setState(() {
-                                    currentPage--;
+                                    _currentPage--;
                                   });
                                 }
                               : null,
                         ),
                         Text(
-                          'Page $currentPage of $maxPages',
+                          'Page $_currentPage of $maxPages',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         IconButton(
                           icon: Icon(Icons.arrow_right),
-                          onPressed: currentPage < maxPages
+                          onPressed: _currentPage < maxPages
                               ? () {
                                   setState(() {
-                                    currentPage++;
+                                    _currentPage++;
                                   });
                                 }
                               : null,

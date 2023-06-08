@@ -82,4 +82,12 @@ class AuthController {
       throw e.toString();
     }
   }
+
+  Future<void> logoutUsers() async {
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      print('Error occurred while signing out: $e');
+    }
+  }
 }
