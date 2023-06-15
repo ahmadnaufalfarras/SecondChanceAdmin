@@ -12,6 +12,7 @@ class OrderScreen extends StatefulWidget {
 
 class _OrderScreenState extends State<OrderScreen> {
   final OrderController _orderController = OrderController();
+  final ScrollController _scrollController = ScrollController();
 
   int _currentPage = 1;
   int _maxPerPage = 10;
@@ -57,27 +58,37 @@ class _OrderScreenState extends State<OrderScreen> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                 )),
-                DataCell(Text(
-                    DateFormat('dd MMM yyyy hh:mm a').format(
-                      orderData.orderDate.toDate(),
-                    ),
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    orderData.productName.isNotEmpty
-                        ? orderData.productName
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    orderData.status.isNotEmpty ? orderData.status : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    orderData.fullName.isNotEmpty ? orderData.fullName : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    orderData.businessName.isNotEmpty
-                        ? orderData.businessName
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
+                DataCell(Flexible(
+                  child: Text(
+                      DateFormat('dd MMM yyyy hh:mm a').format(
+                        orderData.orderDate.toDate(),
+                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      orderData.productName.isNotEmpty
+                          ? orderData.productName
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      orderData.status.isNotEmpty ? orderData.status : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      orderData.fullName.isNotEmpty ? orderData.fullName : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      orderData.businessName.isNotEmpty
+                          ? orderData.businessName
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
               ],
             );
           }).toList();
@@ -101,19 +112,54 @@ class _OrderScreenState extends State<OrderScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Expanded(
-                      child: DataTable(
-                        headingRowColor: MaterialStateProperty.resolveWith(
-                            (states) => Colors.grey.shade200),
-                        columns: const [
-                          DataColumn(label: Text('IMAGE')),
-                          DataColumn(label: Text('ORDER DATE')),
-                          DataColumn(label: Text('PRODUCT NAME')),
-                          DataColumn(label: Text('STATUS')),
-                          DataColumn(label: Text('BUYER NAME')),
-                          DataColumn(label: Text('VENDOR NAME')),
-                        ],
-                        rows: dataRows,
+                    Center(
+                      child: Expanded(
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          controller: _scrollController,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            controller: _scrollController,
+                            child: DataTable(
+                              headingRowColor:
+                                  MaterialStateProperty.resolveWith(
+                                      (states) => Colors.grey.shade200),
+                              columns: const [
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('IMAGE'),
+                                  width: 100,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('ORDER DATE'),
+                                  width: 200,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('PRODUCT NAME'),
+                                  width: 200,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('STATUS'),
+                                  width: 200,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('BUYER NAME'),
+                                  width: 200,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('VENDOR NAME'),
+                                  width: 200,
+                                )),
+                              ],
+                              rows: dataRows,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),

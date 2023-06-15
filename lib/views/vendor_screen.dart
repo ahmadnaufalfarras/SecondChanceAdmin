@@ -11,6 +11,7 @@ class VendorScreen extends StatefulWidget {
 
 class _VendorScreenState extends State<VendorScreen> {
   final VendorController _vendorController = VendorController();
+  final ScrollController _scrollController = ScrollController();
 
   int _currentPage = 1;
   int _maxPerPage = 10;
@@ -58,29 +59,39 @@ class _VendorScreenState extends State<VendorScreen> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                 )),
-                DataCell(Text(
-                    vendorData.businessName.isNotEmpty
-                        ? vendorData.businessName
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    vendorData.email.isNotEmpty ? vendorData.email : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    vendorData.phoneNumber.isNotEmpty
-                        ? vendorData.phoneNumber
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    vendorData.vendorAddress.isNotEmpty
-                        ? vendorData.vendorAddress
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    vendorData.vendorPostalCode.isNotEmpty
-                        ? vendorData.vendorPostalCode
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
+                DataCell(Flexible(
+                  child: Text(
+                      vendorData.businessName.isNotEmpty
+                          ? vendorData.businessName
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      vendorData.email.isNotEmpty ? vendorData.email : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      vendorData.phoneNumber.isNotEmpty
+                          ? vendorData.phoneNumber
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      vendorData.vendorAddress.isNotEmpty
+                          ? vendorData.vendorAddress
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      vendorData.vendorPostalCode.isNotEmpty
+                          ? vendorData.vendorPostalCode
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
                 DataCell(vendorData.approved == false
                     ? ElevatedButton(
                         onPressed: () {
@@ -115,20 +126,55 @@ class _VendorScreenState extends State<VendorScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Expanded(
-                      child: DataTable(
-                        headingRowColor: MaterialStateProperty.resolveWith(
-                            (states) => Colors.grey.shade200),
-                        columns: const [
-                          DataColumn(label: Text('VENDOR IMAGE')),
-                          DataColumn(label: Text('BUSINESS NAME')),
-                          DataColumn(label: Text('EMAIL')),
-                          DataColumn(label: Text('PHONE NUMBER')),
-                          DataColumn(label: Text('ADDRESS')),
-                          DataColumn(label: Text('POSTAL CODE')),
-                          DataColumn(label: Text('ACTION')),
-                        ],
-                        rows: dataRows,
+                    Center(
+                      child: Expanded(
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          controller: _scrollController,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            controller: _scrollController,
+                            child: DataTable(
+                              headingRowColor:
+                                  MaterialStateProperty.resolveWith(
+                                      (states) => Colors.grey.shade200),
+                              columns: const [
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('VENDOR IMAGE'),
+                                  width: 100,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('BUSINESS NAME'),
+                                  width: 200,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('EMAIL'),
+                                  width: 250,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('PHONE NUMBER'),
+                                  width: 150,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('ADDRESS'),
+                                  width: 250,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('POSTAL CODE'),
+                                  width: 100,
+                                )),
+                                DataColumn(label: Text('ACTION')),
+                              ],
+                              rows: dataRows,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),

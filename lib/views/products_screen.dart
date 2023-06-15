@@ -12,6 +12,7 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   final ProductController _productController = ProductController();
+  final ScrollController _scrollController = ScrollController();
 
   int _currentPage = 1;
   int _maxPerPage = 10;
@@ -58,28 +59,40 @@ class _ProductScreenState extends State<ProductScreen> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                 )),
-                DataCell(Text(
-                    DateFormat('dd MMM yyyy hh:mm a').format(
-                      productData.productAddedDate.toDate(),
-                    ),
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                  productData.productName.isNotEmpty
-                      ? productData.productName
-                      : '-',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                DataCell(Flexible(
+                  child: Text(
+                      DateFormat('dd MMM yyyy hh:mm a').format(
+                        productData.productAddedDate.toDate(),
+                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                 )),
-                DataCell(Text(
-                  '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(productData.productPrice)}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                DataCell(Flexible(
+                  child: Text(
+                    productData.productName.isNotEmpty
+                        ? productData.productName
+                        : '-',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 )),
-                DataCell(Text(
-                  productData.category.isNotEmpty ? productData.category : '-',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                DataCell(Flexible(
+                  child: Text(
+                    '${NumberFormat.currency(locale: 'id', symbol: 'Rp ').format(productData.productPrice)}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 )),
-                DataCell(Text(
-                  productData.approved == false ? 'Unpublished' : 'Published',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                DataCell(Flexible(
+                  child: Text(
+                    productData.category.isNotEmpty
+                        ? productData.category
+                        : '-',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                    productData.approved == false ? 'Unpublished' : 'Published',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 )),
               ],
             );
@@ -104,19 +117,54 @@ class _ProductScreenState extends State<ProductScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Expanded(
-                      child: DataTable(
-                        headingRowColor: MaterialStateProperty.resolveWith(
-                            (states) => Colors.grey.shade200),
-                        columns: const [
-                          DataColumn(label: Text('IMAGE')),
-                          DataColumn(label: Text('ADDED DATE')),
-                          DataColumn(label: Text('PRODUCT NAME')),
-                          DataColumn(label: Text('PRODUCT PRICE')),
-                          DataColumn(label: Text('CATEGORY')),
-                          DataColumn(label: Text('STATUS')),
-                        ],
-                        rows: dataRows,
+                    Center(
+                      child: Expanded(
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          controller: _scrollController,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            controller: _scrollController,
+                            child: DataTable(
+                              headingRowColor:
+                                  MaterialStateProperty.resolveWith(
+                                      (states) => Colors.grey.shade200),
+                              columns: const [
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('IMAGE'),
+                                  width: 100,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('ADDED DATE'),
+                                  width: 200,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('PRODUCT NAME'),
+                                  width: 200,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('PRODUCT PRICE'),
+                                  width: 200,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('CATEGORY'),
+                                  width: 175,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('STATUS'),
+                                  width: 100,
+                                )),
+                              ],
+                              rows: dataRows,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),

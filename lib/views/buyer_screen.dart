@@ -11,6 +11,7 @@ class BuyerScreen extends StatefulWidget {
 
 class _BuyerScreenState extends State<BuyerScreen> {
   final BuyerController _buyerController = BuyerController();
+  final ScrollController _scrollController = ScrollController();
 
   int _currentPage = 1;
   int _maxPerPage = 10;
@@ -59,25 +60,35 @@ class _BuyerScreenState extends State<BuyerScreen> {
                           ),
                   ),
                 ),
-                DataCell(Text(
-                    buyerData.fullName.isNotEmpty ? buyerData.fullName : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    buyerData.email.isNotEmpty ? buyerData.email : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    buyerData.phoneNumber.isNotEmpty
-                        ? buyerData.phoneNumber
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    buyerData.address.isNotEmpty ? buyerData.address : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    buyerData.postalCode.isNotEmpty
-                        ? buyerData.postalCode
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
+                DataCell(Flexible(
+                  child: Text(
+                      buyerData.fullName.isNotEmpty ? buyerData.fullName : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      buyerData.email.isNotEmpty ? buyerData.email : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      buyerData.phoneNumber.isNotEmpty
+                          ? buyerData.phoneNumber
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      buyerData.address.isNotEmpty ? buyerData.address : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      buyerData.postalCode.isNotEmpty
+                          ? buyerData.postalCode
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
               ],
             );
           }).toList();
@@ -101,19 +112,54 @@ class _BuyerScreenState extends State<BuyerScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Expanded(
-                      child: DataTable(
-                        headingRowColor: MaterialStateProperty.resolveWith(
-                            (states) => Colors.grey.shade200),
-                        columns: const [
-                          DataColumn(label: Text('PROFILE IMAGE')),
-                          DataColumn(label: Text('FULL NAME')),
-                          DataColumn(label: Text('EMAIL')),
-                          DataColumn(label: Text('PHONE NUMBER')),
-                          DataColumn(label: Text('ADDRESS')),
-                          DataColumn(label: Text('POSTAL CODE')),
-                        ],
-                        rows: dataRows,
+                    Center(
+                      child: Expanded(
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          controller: _scrollController,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            controller: _scrollController,
+                            child: DataTable(
+                              headingRowColor:
+                                  MaterialStateProperty.resolveWith(
+                                      (states) => Colors.grey.shade200),
+                              columns: const [
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('PROFILE IMAGE'),
+                                  width: 100,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('FULL NAME'),
+                                  width: 200,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('EMAIL'),
+                                  width: 250,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('PHONE NUMBER'),
+                                  width: 150,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('ADDRESS'),
+                                  width: 250,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('POSTAL CODE'),
+                                  width: 100,
+                                )),
+                              ],
+                              rows: dataRows,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),

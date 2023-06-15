@@ -11,6 +11,7 @@ class VendorBankScreen extends StatefulWidget {
 
 class _VendorBankScreenState extends State<VendorBankScreen> {
   final VendorController _vendorController = VendorController();
+  final ScrollController _scrollController = ScrollController();
 
   int _currentPage = 1;
   int _maxPerPage = 10;
@@ -46,26 +47,34 @@ class _VendorBankScreenState extends State<VendorBankScreen> {
               displayedData.map<DataRow>((VendorDataModel vendorData) {
             return DataRow(
               cells: [
-                DataCell(Text(
-                    vendorData.businessName.isNotEmpty
-                        ? vendorData.businessName
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    vendorData.vendorBankName.isNotEmpty
-                        ? vendorData.vendorBankName
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    vendorData.vendorBankAccountName.isNotEmpty
-                        ? vendorData.vendorBankAccountName
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    vendorData.vendorBankAccountNumber.isNotEmpty
-                        ? vendorData.vendorBankAccountNumber
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
+                DataCell(Flexible(
+                  child: Text(
+                      vendorData.businessName.isNotEmpty
+                          ? vendorData.businessName
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      vendorData.vendorBankName.isNotEmpty
+                          ? vendorData.vendorBankName
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      vendorData.vendorBankAccountName.isNotEmpty
+                          ? vendorData.vendorBankAccountName
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      vendorData.vendorBankAccountNumber.isNotEmpty
+                          ? vendorData.vendorBankAccountNumber
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
               ],
             );
           }).toList();
@@ -89,17 +98,44 @@ class _VendorBankScreenState extends State<VendorBankScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Expanded(
-                      child: DataTable(
-                        headingRowColor: MaterialStateProperty.resolveWith(
-                            (states) => Colors.grey.shade200),
-                        columns: const [
-                          DataColumn(label: Text('BUSINESS NAME')),
-                          DataColumn(label: Text('BANK NAME')),
-                          DataColumn(label: Text('BANK ACCOUNT NAME')),
-                          DataColumn(label: Text('BANK ACCOUNT NUMBER')),
-                        ],
-                        rows: dataRows,
+                    Center(
+                      child: Expanded(
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          controller: _scrollController,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            controller: _scrollController,
+                            child: DataTable(
+                              headingRowColor:
+                                  MaterialStateProperty.resolveWith(
+                                      (states) => Colors.grey.shade200),
+                              columns: const [
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('BUSINESS NAME'),
+                                  width: 250,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('BANK NAME'),
+                                  width: 250,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('BANK ACCOUNT NAME'),
+                                  width: 250,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('BANK ACCOUNT NUMBER'),
+                                  width: 250,
+                                )),
+                              ],
+                              rows: dataRows,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),

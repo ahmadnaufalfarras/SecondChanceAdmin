@@ -11,6 +11,7 @@ class BuyerBankScreen extends StatefulWidget {
 
 class _BuyerBankScreenState extends State<BuyerBankScreen> {
   final BuyerController _buyerController = BuyerController();
+  final ScrollController _scrollController = ScrollController();
 
   int _currentPage = 1;
   int _maxPerPage = 10;
@@ -45,22 +46,30 @@ class _BuyerBankScreenState extends State<BuyerBankScreen> {
               displayedData.map<DataRow>((BuyerDataModel buyerData) {
             return DataRow(
               cells: [
-                DataCell(Text(
-                    buyerData.fullName.isNotEmpty ? buyerData.fullName : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    buyerData.bankName.isNotEmpty ? buyerData.bankName : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    buyerData.bankAccountName.isNotEmpty
-                        ? buyerData.bankAccountName
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
-                DataCell(Text(
-                    buyerData.bankAccountNumber.isNotEmpty
-                        ? buyerData.bankAccountName
-                        : '-',
-                    style: TextStyle(fontWeight: FontWeight.bold))),
+                DataCell(Flexible(
+                  child: Text(
+                      buyerData.fullName.isNotEmpty ? buyerData.fullName : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      buyerData.bankName.isNotEmpty ? buyerData.bankName : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      buyerData.bankAccountName.isNotEmpty
+                          ? buyerData.bankAccountName
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                DataCell(Flexible(
+                  child: Text(
+                      buyerData.bankAccountNumber.isNotEmpty
+                          ? buyerData.bankAccountNumber
+                          : '-',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                )),
               ],
             );
           }).toList();
@@ -84,17 +93,45 @@ class _BuyerBankScreenState extends State<BuyerBankScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Expanded(
-                      child: DataTable(
-                        headingRowColor: MaterialStateProperty.resolveWith(
-                            (states) => Colors.grey.shade200),
-                        columns: const [
-                          DataColumn(label: Text('BUYER NAME')),
-                          DataColumn(label: Text('BANK NAME')),
-                          DataColumn(label: Text('BANK ACCOUNT NAME')),
-                          DataColumn(label: Text('BANK ACCOUNT NUMBER')),
-                        ],
-                        rows: dataRows,
+                    Center(
+                      child: Expanded(
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          controller: _scrollController,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            controller: _scrollController,
+                            child: DataTable(
+                              headingRowColor:
+                                  MaterialStateProperty.resolveWith(
+                                      (states) => Colors.grey.shade200),
+                              columns: const [
+                                DataColumn(
+                                  label: SizedBox(
+                                    child: Text('BUYER NAME'),
+                                    width: 250,
+                                  ),
+                                ),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('BANK NAME'),
+                                  width: 250,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('BANK ACCOUNT NAME'),
+                                  width: 250,
+                                )),
+                                DataColumn(
+                                    label: SizedBox(
+                                  child: Text('BANK ACCOUNT NUMBER'),
+                                  width: 250,
+                                )),
+                              ],
+                              rows: dataRows,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),
