@@ -90,7 +90,6 @@ class CategoryWidget extends StatelessWidget {
                                         context,
                                         categoryData.categoryId,
                                         categoryData.categoryName);
-                                    Navigator.of(context).pop();
                                   },
                                 ),
                               ],

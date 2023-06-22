@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:second_chance_admin/models/category_model.dart';
 import 'package:second_chance_admin/services/firebase_storage_service.dart';
 import 'package:second_chance_admin/utils/refresh_page.dart';
+import 'package:second_chance_admin/utils/show_dialog.dart';
 import 'package:uuid/uuid.dart';
 
 class CategoryController {
@@ -84,6 +85,8 @@ class CategoryController {
 
   Future<void> deleteCategory(
       BuildContext context, String categoryId, String categoryName) async {
+    EasyLoading.show();
+
     try {
       final categoryRef = _firestore.collection('categories').doc(categoryId);
       final productsSnapshot = await _firestore
@@ -96,13 +99,31 @@ class CategoryController {
           'Cannot delete category. Products exist with this category.',
         );
       }
-
       await categoryRef.delete();
-    } catch (error) {
-      final snackBar = SnackBar(
-        content: Text('Failed to delete category: $error'),
+      await EasyLoading.dismiss();
+      Navigator.of(context).pop();
+      displayDialog(
+        context,
+        'Category has been deleted successfully',
+        Icon(
+          Icons.delete,
+          color: Colors.red.shade600,
+          size: 60,
+        ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } catch (error) {
+      await EasyLoading.dismiss();
+      Navigator.of(context).pop();
+
+      displayDialog(
+        context,
+        'Failed to delete category: $error',
+        Icon(
+          Icons.cancel,
+          color: Colors.red.shade600,
+          size: 60,
+        ),
+      );
     }
   }
 }

@@ -95,12 +95,18 @@ class _VendorScreenState extends State<VendorScreen> {
                 DataCell(vendorData.approved == false
                     ? ElevatedButton(
                         onPressed: () {
-                          _vendorController.approveVendor(vendorData.vendorId);
+                          _vendorController.approveVendor(
+                            vendorData.vendorId,
+                            context,
+                          );
                         },
                         child: Text('Approve'))
                     : ElevatedButton(
                         onPressed: () {
-                          _vendorController.rejectVendor(vendorData.vendorId);
+                          _vendorController.rejectVendor(
+                            vendorData.vendorId,
+                            context,
+                          );
                         },
                         child: Text('Reject')))
               ],

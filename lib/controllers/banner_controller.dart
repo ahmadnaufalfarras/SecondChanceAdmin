@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:second_chance_admin/models/banner_model.dart';
 import 'package:second_chance_admin/services/firebase_storage_service.dart';
 import 'package:second_chance_admin/utils/refresh_page.dart';
+import 'package:second_chance_admin/utils/show_dialog.dart';
 import 'package:uuid/uuid.dart';
 
 class BannerController {
@@ -77,9 +78,21 @@ class BannerController {
     }
   }
 
-  Future<void> deleteBanner(String bannerId) async {
+  Future<void> deleteBanner(String bannerId, BuildContext context) async {
     try {
+      EasyLoading.show();
       await _firestore.collection('banners').doc(bannerId).delete();
+      await EasyLoading.dismiss();
+      Navigator.of(context).pop();
+      displayDialog(
+        context,
+        'Banner has been deleted successfully',
+        Icon(
+          Icons.delete,
+          color: Colors.red.shade600,
+          size: 60,
+        ),
+      );
     } catch (error) {
       Text('Failed to delete banner: $error');
     }

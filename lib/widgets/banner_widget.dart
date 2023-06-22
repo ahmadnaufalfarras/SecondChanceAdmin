@@ -87,9 +87,10 @@ class BannerWidget extends StatelessWidget {
                                     child: Text('Delete'),
                                     onPressed: () async {
                                       try {
-                                        await _bannerController
-                                            .deleteBanner(bannerData.bannerId);
-                                        Navigator.of(context).pop();
+                                        await _bannerController.deleteBanner(
+                                          bannerData.bannerId,
+                                          context,
+                                        );
                                       } catch (e) {
                                         showDialog(
                                           context: context,
