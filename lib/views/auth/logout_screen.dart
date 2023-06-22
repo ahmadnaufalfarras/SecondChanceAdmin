@@ -13,21 +13,43 @@ class AdminLogoutScreen extends StatefulWidget {
 class _AdminLogoutScreenState extends State<AdminLogoutScreen> {
   final AuthController _controller = AuthController();
 
-  Future<void> _handleLogoutUsers() async {
-    EasyLoading.show(status: 'Logging out');
+  Future<void> _handleLogoutUsers(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Are you sure you want to logout?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Logout'),
+              onPressed: () async {
+                EasyLoading.show(status: 'Logging out');
 
-    await _controller.logoutUsers().whenComplete(() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return AuthenticationWrapper();
-          },
-        ),
-      );
+                await _controller.logoutUsers().whenComplete(() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AuthenticationWrapper();
+                      },
+                    ),
+                  );
 
-      EasyLoading.dismiss();
-    });
+                  EasyLoading.dismiss();
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -36,9 +58,7 @@ class _AdminLogoutScreenState extends State<AdminLogoutScreen> {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            EasyLoading.show(status: 'Logging out');
-
-            await _handleLogoutUsers();
+            await _handleLogoutUsers(context);
           },
           child: Text('Logout'),
         ),
