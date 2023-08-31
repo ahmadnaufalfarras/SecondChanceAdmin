@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:second_chance_admin/models/dashboard_model.dart';
 import 'package:second_chance_admin/utils/build_cards.dart';
+import '../controllers/dashboard_controller.dart';
 
 class DashboardScreen extends StatefulWidget {
   static const String routeName = '\DashboardScreen';
@@ -10,12 +11,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  int _vendorCount = 0;
-  int _buyerCount = 0;
-  int _orderCount = 0;
-  int _productCount = 0;
-  int _bannerCount = 0;
-  int _categoryCount = 0;
+  DashboardDataModel _dashboardData = DashboardDataModel();
+  DashboardController _controller = DashboardController();
 
   @override
   void initState() {
@@ -24,35 +21,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _fetchDataCounts() async {
-    try {
-      QuerySnapshot vendorSnapshot =
-          await FirebaseFirestore.instance.collection('vendors').get();
-      _vendorCount = vendorSnapshot.docs.length;
-
-      QuerySnapshot buyerSnapshot =
-          await FirebaseFirestore.instance.collection('buyers').get();
-      _buyerCount = buyerSnapshot.docs.length;
-
-      QuerySnapshot orderSnapshot =
-          await FirebaseFirestore.instance.collection('orders').get();
-      _orderCount = orderSnapshot.docs.length;
-
-      QuerySnapshot productSnapshot =
-          await FirebaseFirestore.instance.collection('products').get();
-      _productCount = productSnapshot.docs.length;
-
-      QuerySnapshot bannerSnapshot =
-          await FirebaseFirestore.instance.collection('banners').get();
-      _bannerCount = bannerSnapshot.docs.length;
-
-      QuerySnapshot categorySnapshot =
-          await FirebaseFirestore.instance.collection('categories').get();
-      _categoryCount = categorySnapshot.docs.length;
-
-      setState(() {});
-    } catch (error) {
-      Text('Terjadi kesalahan saat mengambil data: $error');
-    }
+    await _controller.getDataCounts();
+    setState(() {
+      _dashboardData = _controller.dashboardDataModel;
+    });
   }
 
   @override
@@ -82,17 +54,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     crossAxisCount: 3,
                     childAspectRatio: 1.5,
                     children: [
-                      buildCard(
-                          Icons.store, Colors.black, 'Vendor', _vendorCount),
-                      buildCard(Icons.person, Colors.red, 'Buyer', _buyerCount),
+                      buildCard(Icons.store, Colors.black, 'Vendor',
+                          _dashboardData.vendorCount),
+                      buildCard(Icons.person, Colors.red, 'Buyer',
+                          _dashboardData.buyerCount),
                       buildCard(Icons.inventory_2, Colors.blue, 'Product',
-                          _productCount),
+                          _dashboardData.productCount),
                       buildCard(Icons.shopping_cart, Colors.green, 'Order',
-                          _orderCount),
-                      buildCard(
-                          Icons.flag, Colors.purple, 'Banner', _bannerCount),
+                          _dashboardData.orderCount),
+                      buildCard(Icons.flag, Colors.purple, 'Banner',
+                          _dashboardData.bannerCount),
                       buildCard(Icons.category, Colors.yellow.shade600,
-                          'Category', _categoryCount),
+                          'Category', _dashboardData.categoryCount),
                     ],
                   ),
                 ),
